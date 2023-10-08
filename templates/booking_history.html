@@ -1,0 +1,44 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% include "base/navbar.html" %}
+<div class="container mt-5">
+    <div class="container d-flex flex-column align-items-center">
+      <h2 class="font-weight-bold">Recent Bookings</h2>
+    </div>
+      <div class="mt-4 col-md-6 mx-auto">
+          {% for booking in  bookings %}
+          <a style="text-decoration: none;" href="{% url "viewForm" booking.id%}">
+              <div class="mt-4 py-3">
+                  <div class="card">
+                      <small class="card-header">Booked on {{booking.created_at}}</small>
+                      <div class="card-body">
+                          <h4 class="card-title">{{booking.program_title}}</h4>
+                          <p>On {{booking.date}}</p>
+                          <p>At {{booking.venue}}
+                            {% if booking.ac %}
+                            <sup class="badge rounded-pill text-bg-primary">a/c</sup>
+                            {% endif %}
+                          </p>
+                          <p class="card-text">Media : {{booking.media_selection}}</p>
+                          <div style="display: flex; gap: 1rem;" class="card-text">
+                              {% for slot in booking.time_slots.all %}
+                              <small class="card p-1 bg-secondary" style="color: white;">{{slot.time_period}}</small>
+                              {% endfor %}
+                          </div>
+                      </div>
+                      {% if booking.status == 'Success' %}
+                        <div class="card-footer bg-success text-light">Booking is Confirmed.</div>
+                      {% elif booking.status == 'Pending' %}
+                        <div class="card-footer bg-secondary text-light">Booking is Pending.</div>
+                      {% elif booking.status == 'Rejected'%}
+                        <div class="card-footer bg-danger text-light">Booking is Rejected.</div>
+                      {% endif %}
+                  </div>
+              </div>
+          </a>
+          {% endfor %}
+      </div>
+</div>
+
+{% endblock content %}

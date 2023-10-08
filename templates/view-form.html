@@ -1,0 +1,99 @@
+{% extends 'base/base.html' %} 
+{% block content %} 
+{% include "base/navbar.html"%}
+
+<div class="container mt-5">
+  <h3>Submitted Form Preview.</h3>
+  <hr />
+
+  <div class="align-items-center mt-4">
+    {% csrf_token %}
+    
+    <div class="form-group mb-3">
+        <label for="program_title">Title of the Programme</label>
+        <input type="text" class="form-control" value="{{booking.program_title}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="requested_dep">Name of the Department</label>
+        <input type="text" class="form-control" name="requested_dep" id="requested_dep" value="{{booking.requested_dep}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="venue">Venue Required</label>
+        <input type="text" class="form-control" value="{{booking.venue}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="venue">Venue Type</label>
+        {% if booking.ac %}
+        <input type="text" class="form-control" value="A/C" readonly>
+        {% else %}
+        <input type="text" class="form-control" value="Non A/C" readonly>
+        {% endif %}
+    </div>
+
+
+    <div class="form-group mb-3">
+        <label for="date">Proposed Date of programme</label>
+        <input type="text" class="form-control" name="date" id="date" value="{{booking.date}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="time_slots">Time Slots</label><br>
+        <div style="display: flex; gap: 0.5rem;" class="p-2">
+            {% for slot in booking.time_slots.all %}
+                    <span class="card p-1 bg-secondary" style="color: white;">{{slot.time_period}}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="coordinator">Name of the Co-ordinator/Tutor</label>
+        <input type="text" class="form-control" name="coordinator"value="{{booking.coordinator}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="contact_no">Contact No</label>
+        <input type="text" class="form-control" name="contact_no" value="{{booking.contact_no}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="expected_no_of_participants">Expected number of Participants</label>
+        <input type="number" class="form-control" name="expected_no_of_participants" value="{{booking.expected_no_of_participants}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="level">Level</label>
+        <input type="text" class="form-control" value="{{booking.level}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="sponsor">Funding/Sponsor Agency if any</label>
+        <input type="text" class="form-control" name="sponsor" value="{{booking.sponsor}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="chief_guest">Profile of the Chief Guest/Resource Person</label>
+        <input type="text" class="form-control" name="chief_guest" value="{{booking.chief_guest}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="media_selection">Media Selection</label>
+        <input type="text" class="form-control" value="{{booking.media_selection}}" readonly>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="objective_of_programme">Objective of the Programme</label>
+        <textarea class="form-control" name="objective_of_programme" rows="10" placeholder="{{booking.objective_of_programme}}" readonly ></textarea>
+    </div>
+    {% if booking.status != 'Success' %}
+    <div class="form-group mb-3">
+        <a href="{% url "booking-cancel" booking.id%}" class="btn btn-danger">Cancel Booking</a>
+    </div>
+    {% endif %}
+</div>
+
+</div>
+
+{% endblock content %}

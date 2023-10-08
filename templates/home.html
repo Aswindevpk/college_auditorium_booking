@@ -1,0 +1,72 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% include "base/navbar.html" %}
+  <div class="container mt-5">
+      <div class="container d-flex flex-column align-items-center">
+        <h2 class="font-weight-bold">Welcome {{user.username}}</h2>
+        <p>Book the perfect auditorium for your event</p>
+      </div>
+        <div class="col-md-6 col-8 mx-auto mt-4">
+            <form class="form-inline row justify-content-between" action="{% url "home" %}" method="POST">
+                {% csrf_token %}
+                {% if search_date %}
+                    <div class="form-group mb-2 col-8">
+                        <input type="date" class="form-control" name="date" value="{{search_date}}" required>
+                    </div>
+                {% endif %}
+                <div class="col-2">
+                    <button type="submit"  value="submit" class="btn btn-primary mb-2">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="mt-4 col-md-6 mx-auto">
+            {% for available_venue in available_venues %}
+            <div class="mt-4 py-3">
+                <div class="card">
+                    {% if available_venue.venue.AC %}
+                        <small class="card-header">A/C</small>
+                    {% endif %}
+                    <h4 class="p-4 card-title">{{available_venue.venue.name}}</h4>
+
+                    <div style="display: flex; gap: 0.5rem;" class="p-2 justify-content-between">
+                        {% for item in available_venue.slots%}
+                        {% if item.status == 'free' %}
+                            <small class="card p-1 bg-success" style="color: white;">{{item.time_period}}</small>
+                        {% endif %} 
+                        {% if item.status == 'Pending' %}
+                            <small class="card p-1 bg-warning" style="color: white;">{{item.time_period}}</small>
+                        {% endif %} 
+                        {% if item.status == 'Success' %}
+                            <small  class="card p-1 bg-light" style="color: gray;">{{item.time_period}}</small>
+                        {% endif %} 
+                        {% endfor %}
+                    </div>
+                    {% if available_venue.all_booked %}
+                    <div class="card-footer text-body-secondary">
+                        <span>No More Slots to book.</span>
+                    </div>
+                    {% else %}
+                    <div class="card-footer text-body-secondary">
+                        <a class="btn btn-primary" href="{% url "booking_form" available_venue.venue.name search_date %}">Book now</a>
+                    </div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+  </div>
+</div>
+
+<script>
+    // Get the current date in the format "YYYY-MM-DD"
+    var currentDate = new Date().toISOString().slice(0, 10);
+
+    // Set the default value of the date input
+    document.getElementById("date").value = currentDate;
+</script>
+
+
+
+{% endblock content %}

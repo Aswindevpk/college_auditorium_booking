@@ -1,0 +1,110 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% include "base/navbar.html" %}
+<div class=" container mt-5 col-md-6">
+    
+    <h3>Fill the Form to Book</h3>
+    <form class="align-items-center mt-4" method="post" action="{% url 'booking-request' %}">
+        {% csrf_token %}
+        
+        <div class="form-group mb-3">
+            <label for="program_title">Title of the Programme</label>
+            <input type="text" class="form-control" name="program_title" id="program_title" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="requested_dep">Name of the Department</label>
+            <input type="text" class="form-control" name="requested_dep" id="requested_dep" value="{{user}}" readonly>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="venue">Venue Required</label>
+            <input style="display: none;" type="text" class="form-control" name="venue" id="venue" value="{{venue.id}}" readonly>
+            <input type="text" class="form-control" value="{{venue}}" readonly>
+        </div>
+        {% if venue.AC %}
+        <div class="form-group mb-3">
+            <label>Select Booking Type:</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="ac" id="acRadio" value='ac'>
+                <label class="form-check-label" for="acRadio">AC</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="ac" id="nonAcRadio" value="non-ac" checked>
+                <label class="form-check-label" for="nonAcRadio">Non-AC</label>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group mb-3">
+            <label for="date">Proposed Date of programme</label>
+            <input type="text" class="form-control" name="date" id="date" value="{{date}}" readonly>
+        </div>
+    
+        <div class="form-group mb-3">
+            <label for="time_slots">Time Slots</label>
+            <select name="time_slots" id="time_slots"  class="form-select" size="5" multiple>
+                {% for item in slots_avail %}
+                    {% if item.status == 'free' %}
+                        <option value="{{item.id}}">{{item.time_period}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="form-group mb-3">
+            <label for="coordinator">Name of the Co-ordinator/Tutor</label>
+            <input type="text" class="form-control" name="coordinator" id="coordinator" required>
+        </div>
+    
+        <div class="form-group mb-3">
+            <label for="contact_no">Contact No</label>
+            <input type="text" class="form-control" name="contact_no" id="contact_no" required>
+        </div>
+    
+        <div class="form-group mb-3">
+            <label for="expected_no_of_participants">Expected number of Participants</label>
+            <input type="number" class="form-control" name="expected_no_of_participants" id="expected_no_of_participants" required>
+        </div>
+    
+        <div class="form-group mb-3">
+            <label for="level">Level</label>
+            <select name="level" id="level" class="form-select" required>
+                {% for level in levels %}
+                    <option value="{{level.id}}">{{level.level}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="form-group mb-3">
+            <label for="sponsor">Funding/Sponsor Agency if any</label>
+            <input type="text" class="form-control" name="sponsor" id="sponsor" required>
+        </div>
+    
+        <div class="form-group mb-3">
+            <label for="chief_guest">Profile of the Chief Guest/Resource Person</label>
+            <input type="text" class="form-control" name="chief_guest" id="chief_guest" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="media_selection">Media Selection</label>
+            <select name="media_selection" id="media_selection" class="form-select" required>
+                {% for media in medias %}
+                    <option value="{{media.id}}">{{media}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="form-group mb-3">
+            <label for="objective_of_programme">Objective of the Programme</label>
+            <textarea class="form-control" name="objective_of_programme" rows="10" required></textarea>
+        </div>
+    
+    
+        <button type="submit" class="btn btn-primary mb-3">Send Request</button>
+    </form>
+</div>
+
+
+{% endblock content %}
