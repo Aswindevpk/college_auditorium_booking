@@ -1,0 +1,106 @@
+{% extends 'base/base.html' %}
+{% block content %}
+  {% include 'base/navbar.html' %}
+
+  <div class="container">
+    <div class="align-items-center mt-4 d-flex flex-column">
+      <div class="col-8" id="printContent">
+        <h3>Postpone preview</h3>
+        <p class="bold">Booking ID : {{ booking.booking_number }}</p>
+        <hr />
+        <div class="row align-items-start">
+          <div class="col">
+            <p class="font-weight-bold">Program Name : {{ booking.program_title }}</p>
+            <p>Co-ordinator : {{ booking.coordinator }}</p>
+
+            <p>Contact : {{ booking.contact_no }}</p>
+            <p>No of Participants : {{ booking.participants }}</p>
+
+            <p>Level : {{ booking.level }}</p>
+
+            <p>Funded By : {{ booking.sponsor }}</p>
+
+            <p>Chief Guest : {{ booking.chief_guest }}</p>
+
+            <p>Media : {{ booking.media }}</p>
+            <p>Program Objective : {{ booking.program_obj }}</p>
+          </div>
+          <div class="col text-end">
+            <p>{{ booking.venue }}</p>
+            {% if booking.ac %}
+              <p>A/c</p>
+            {% endif %}
+            <p>{{ booking.date }}</p>
+            <div>
+              {% for slot in booking.slots.all %}
+                <p class="card p-1 bg-success d-inline" style="color: white;">{{ slot.time_period }}</p><br /><br />
+              {% endfor %}
+            </div>
+          </div>
+          <hr />
+        </div>
+      </div>
+      <button class="btn-primary btn" id="submitBtn">Submit</button>
+    </div>
+  </div>
+
+  <!-- Add the Bootstrap modal HTML at the end of your template -->
+  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Booking Request Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Your booking has been postponed !</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const csrf_token = '{{ csrf_token }}';
+    document.getElementById('submitBtn').addEventListener('click', function() {
+        // Data to be sent
+        const data = {
+            pk: '{{ booking.id }}',
+            date: '{{ booking.date }}',
+            venue: '{{ booking.venue.id }}',
+            slots: [{% for slot in booking.slots.all %}'{{ slot.id }}',{% endfor %}],
+        };
+
+        fetch('{% url 'postpone-request-submit' %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token, // Assuming you have CSRF protection
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Check if the response indicates success
+            if (data.success) {
+                // Show the Bootstrap modal
+                var myModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+                myModal.show();
+                            
+                // Optionally, redirect to a new page after a delay
+                setTimeout(function(){
+                    window.location.href = '{% url 'home' %}';
+                }, 3000); // Redirect after 10 seconds (adjust as needed)
+            } else {
+                // Handle the case when the server returns an error
+                console.error('Server error:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,10 +1,10 @@
 {% extends 'base/base.html' %}
-
 {% block content %}
 {% include "base/navbar.html" %}
   <div class="container mt-5">
+
       <div class="container d-flex flex-column align-items-center">
-        <h2 class="font-weight-bold">Welcome {{user.username}}</h2>
+        <h2 class="font-weight-bold">Welcome To SJC Auditorium booking System</h2>
         <p>Book the perfect auditorium for your event</p>
       </div>
         <div class="col-md-6 col-8 mx-auto mt-4">
@@ -12,7 +12,7 @@
                 {% csrf_token %}
                 {% if search_date %}
                     <div class="form-group mb-2 col-8">
-                        <input type="date" class="form-control" name="date" value="{{search_date}}" required>
+                        <input type="date" id="dateInput" class="form-control" name="date" value="{{search_date}}" required>
                     </div>
                 {% endif %}
                 <div class="col-2">
@@ -60,11 +60,23 @@
 </div>
 
 <script>
-    // Get the current date in the format "YYYY-MM-DD"
-    var currentDate = new Date().toISOString().slice(0, 10);
+   // Set the minimum allowed date to tomorrow
+   var tomorrow = new Date();
+   tomorrow.setDate(tomorrow.getDate() + 1);
 
-    // Set the default value of the date input
-    document.getElementById("date").value = currentDate;
+   var tomorrowString = tomorrow.toISOString().split('T')[0];
+   document.getElementById('dateInput').setAttribute('min', tomorrowString);
+
+   // Add event listener to enforce the restriction dynamically
+   document.getElementById('dateInput').addEventListener('input', function() {
+       var selectedDate = new Date(this.value);
+
+       // Check if the selected date is at least tomorrow
+       if (selectedDate < tomorrowString) {
+           alert('Please select a date from tomorrow onwards.');
+           this.value = "";
+       }
+   });
 </script>
 
 

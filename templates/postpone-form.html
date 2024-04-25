@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %} 
+{% block content %} 
+{% include "base/navbar.html"%}
+
+<div class="container mt-5 col-8">
+  <h3>Postpone</h3>
+  <hr/>
+  <div class="align-items-center mt-4">
+    <form class="form-inline row justify-content-between" action="{% url 'check-available'%}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="pk" value="{{booking.id}}">
+        <div class="form-group mb-2 col-6">
+            <label class="mb-2" for="date">Date</label>
+            <input type="date" id="dateInput" class="form-control" name="date" value="{{search_date}}" required>
+        </div>
+
+        <div class="form-group mb-2 col-6">
+            <label class="mb-2" for="venues">Venue</label>
+            <select name="venue" id="venue" class="form-select" required>
+                {% for venue in venues %}
+                    <option value="{{venue.id}}">{{venue}}</option>
+                    {% endfor %}
+                    {% if venue_sel %}
+                    <option value="{{venue_sel.id}}" selected>{{venue_sel}}</option>
+                    {% endif %}
+                </select>
+        </div>
+        <div class="text-end mb-4">
+            <button type="submit"  value="submit" class="btn btn-primary mb-2">Check availablility</button>
+        </div>
+    </form>
+
+    <h5>Select Slots</h5>
+
+    {% if slots_list %}
+    <form action="{% url "postpone-request-preview" %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="pk" value="{{booking.id}}">
+        <input type="hidden" name="venue" value="{{venue_sel.id}}" hidden>
+        <input type="hidden" name="date" value="{{search_date}}" hidden>
+        <div class="form-group mb-3">
+            <label for="time_slots">Time Slots</label>
+            <select name="time_slots" id="time_slots"  class="form-select" size="5" multiple required>
+                {% for item in slots_list %}
+                        <option value="{{item.id}}">{{item.time_period}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="text-end">
+            <button type="submit"  value="submit" class="btn btn-primary mb-2">Review postpone</button>
+        </div>
+    </form>
+
+    {% else %}
+    <div>
+        <p>No slots available for the date!</p>
+    </div>
+    {% endif %}
+
+</div>
+</div>
+
+
+{% endblock content %}

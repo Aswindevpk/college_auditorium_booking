@@ -1,0 +1,53 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% include "base/navbar-admin.html" %}
+
+<div class="container mt-5  ">
+    <div  class="align-items-center d-flex flex-column">
+        <div class="col-8" id="printContent">
+          <h3> Booking Details</h3>
+          <p class="bold">Booking ID : {{booking.booking_number}}</p>
+          <hr>
+            <div class="row align-items-start ">
+                <div class="col">
+                  <p class="font-weight-bold">Program Name : {{booking.program_title}}</p>
+                  <p>Co-ordinator : {{booking.coordinator}}</p>
+      
+                  <p>Contact : {{booking.contact_no}}</p>
+                  <p>No of Participants : {{booking.participants}}</p>
+              
+                  <p>Level : {{booking.level}}</p>
+              
+                  <p>Funded By : {{booking.sponsor}}</p>
+              
+                  <p>Chief Guest : {{booking.chief_guest}}</p>
+              
+                  <p>Media : {{booking.media}}</p>
+                  <p>Program Objective : {{booking.program_obj}}</p>
+      
+                </div>
+                <div class="col text-end">
+                  <p>{{booking.venue}}</p>
+                  {% if booking.ac %}
+                  <p>A/c</p>
+                  {% endif %}
+                  <p>{{booking.date}}</p>
+                  <div>
+                      {% for slot in booking.slots.all %}
+                      <p class="card p-1 bg-success d-inline" style="color: white;">{{slot.time_period}}</p><br><br>
+                    {% endfor %}
+                  </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+{% endblock content %}
+
+

@@ -1,0 +1,22 @@
+manual settings
+create the super user
+create the default user for the department user
+create the staff user for the admin user
+create the slots (0-forenoon, 1-afternoon)
+create the Venues (indoor stadium, pta hall etc ..)
+create the media sel (video, photo,none, both)
+
+
+routes
+http://127.0.0.1:8000/login/  - normal login
+http://127.0.0.1:8000/booking-admin/  - normal login
+sjcdmin,sjcmain with staff status
+
+
+passwords
+/admin - admin, pass 
+/login - CS pass@123
+/booking-admin - sjcadmin pass@123
+                 sjcmain pass@123
+
+                 

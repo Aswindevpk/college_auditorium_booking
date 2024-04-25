@@ -3,100 +3,117 @@
 {% block content %}
 {% include "base/navbar-admin.html" %}
 
-<div class="container mt-5">
-    <h3>Submitted Form Preview.</h3>
-    <hr />
-  
-    <div class="align-items-center mt-4">
-      {% csrf_token %}
+<div class="container mt-5  ">
+    <div  class="align-items-center d-flex flex-column">
+        <div class="col-8" id="printContent">
+          <h3> Booking Details</h3>
+          <p class="bold">Booking ID : {{booking.booking_number}}</p>
+          <hr>
+            <div class="row align-items-start ">
+                <div class="col">
+                  <p class="font-weight-bold">Program Name : {{booking.program_title}}</p>
+                  <p>Co-ordinator : {{booking.coordinator}}</p>
       
-      <div class="form-group mb-3">
-          <label for="program_title">Title of the Programme</label>
-          <input type="text" class="form-control" value="{{booking.program_title}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="requested_dep">Name of the Department</label>
-          <input type="text" class="form-control" name="requested_dep" id="requested_dep" value="{{booking.requested_dep}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="venue">Venue Required</label>
-          <input type="text" class="form-control" value="{{booking.venue}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="venue">Venue Type</label>
-          {% if booking.ac %}
-          <input type="text" class="form-control" value="A/C" readonly>
-          {% else %}
-          <input type="text" class="form-control" value="Non A/C" readonly>
-          {% endif %}
-      </div>
-  
-  
-      <div class="form-group mb-3">
-          <label for="date">Proposed Date of programme</label>
-          <input type="text" class="form-control" name="date" id="date" value="{{booking.date}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="time_slots">Time Slots</label><br>
-          <div style="display: flex; gap: 0.5rem;" class="p-2">
-              {% for slot in booking.time_slots.all %}
-                      <span class="card p-1 bg-secondary" style="color: white;">{{slot.time_period}}</span>
-              {% endfor %}
-          </div>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="coordinator">Name of the Co-ordinator/Tutor</label>
-          <input type="text" class="form-control" name="coordinator"value="{{booking.coordinator}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="contact_no">Contact No</label>
-          <input type="text" class="form-control" name="contact_no" value="{{booking.contact_no}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="expected_no_of_participants">Expected number of Participants</label>
-          <input type="number" class="form-control" name="expected_no_of_participants" value="{{booking.expected_no_of_participants}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="level">Level</label>
-          <input type="text" class="form-control" value="{{booking.level}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="sponsor">Funding/Sponsor Agency if any</label>
-          <input type="text" class="form-control" name="sponsor" value="{{booking.sponsor}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="chief_guest">Profile of the Chief Guest/Resource Person</label>
-          <input type="text" class="form-control" name="chief_guest" value="{{booking.chief_guest}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="media_selection">Media Selection</label>
-          <input type="text" class="form-control" value="{{booking.media_selection}}" readonly>
-      </div>
-  
-      <div class="form-group mb-3">
-          <label for="objective_of_programme">Objective of the Programme</label>
-          <textarea class="form-control" name="objective_of_programme" rows="10" placeholder="{{booking.objective_of_programme}}" readonly ></textarea>
-      </div>
+                  <p>Contact : {{booking.contact_no}}</p>
+                  <p>No of Participants : {{booking.participants}}</p>
+              
+                  <p>Level : {{booking.level}}</p>
+              
+                  <p>Funded By : {{booking.sponsor}}</p>
+              
+                  <p>Chief Guest : {{booking.chief_guest}}</p>
+              
+                  <p>Media : {{booking.media}}</p>
+                  <p>Program Objective : {{booking.program_obj}}</p>
+      
+                </div>
+                <div class="col text-end">
+                  <p>{{booking.venue}}</p>
+                  {% if booking.ac %}
+                  <p>A/c</p>
+                  {% endif %}
+                  <p>{{booking.date}}</p>
+                  <div>
+                      {% for slot in booking.slots.all %}
+                      <p class="card p-1 bg-success d-inline" style="color: white;">{{slot.time_period}}</p><br><br>
+                    {% endfor %}
+                  </div>
+                </div>
+                {% if booking.is_approved %}
+                <h4 class="text-center text-success">Booking Successfully Approved !</h4>
+                {%endif%}
+                <hr>
+            </div>
+        </div>
+        <div class="col-8 row">
+            <div class="col">
+                <div class="form-group mb-3">
+                    <form id="myForm" method="post" action="{% url "rejectBooking"%}" >
+                        {% csrf_token %}
+                        <label for="objective_of_programme">Reason if Cancellation:</label>
+                        <input type="hidden" name="id" value="{{booking.id}}">
+                        <textarea class="form-control mb-3" name="reason" rows="3" required></textarea>
+                        <button type="submit" class="btn btn-danger mb-3">Reject Booking</button>
+                    </form>
+                </div>
+            </div>
+            <div class=" col text-end">
+                <div class="form-group mb-3">
+                    <button onclick="confirmApprove()" class="btn btn-success" >Approve Booking</button>
+                </div>
+            </div>
+        </div>
 
-      {% if booking.status == 'Pending' %}
-      <div class="form-group mb-3">
-          <a href="{% url "rejectBooking" booking.id%}" class="btn btn-danger">Reject Booking</a>
-          <a href="{% url "approveBooking" booking.id%}" class="btn btn-success">Approve Booking</a>
-      </div>
-      {% endif %}
-  </div>
-  
-  </div>
+
+        <!-- Create a modal for confirmation -->
+        <div class="modal" id="confirmationModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Confirmation</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure you want to Approve the booking?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                  <button type="button" class="btn btn-primary" onclick="proceedWithApprove()">Yes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#myForm").submit(function(event) {
+            event.preventDefault()
+            // Show a confirmation dialog
+            var isConfirmed = confirm("Are you sure you want to submit the form?");
+
+            // If confirmed, manually submit the form
+            if (isConfirmed) {
+                this.submit();
+            }
+        });
+    });
+</script>
+
+<script>
+    function confirmApprove() {
+    $('#confirmationModal').modal('show');
+    }
+    function proceedWithApprove() {
+        console.log("Hihihih");
+        window.location.href = "{% url "approveBooking" booking.id %}";
+    }
+</script>
 
 {% endblock content %}
+
+

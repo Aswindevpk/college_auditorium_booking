@@ -1,6 +1,6 @@
 from django.db import models
 from base.models import BaseModel
-from django.utils.text import slugify
+import uuid
 
 # Create your models here.
 
@@ -11,7 +11,7 @@ class Venue(BaseModel):
     def __str__(self)-> str:
         return self.name
     
-    
+
 class Levels(BaseModel):
     level = models.CharField(max_length=100)
 
@@ -19,16 +19,12 @@ class Levels(BaseModel):
         return self.level
     
 
-
-
-class Media(BaseModel):
-    media = models.CharField(max_length=50)
+class Media_sel(BaseModel):
+    media_type = models.CharField(max_length=100)
 
     def __str__(self)-> str:
-        return self.media
+        return self.media_type
     
-
-
 
 class Slots(BaseModel):
     slot = models.CharField(max_length=2)
@@ -39,49 +35,67 @@ class Slots(BaseModel):
 
 
 class Booking_request(BaseModel):
-    STATUS_CHOICES = (
-        ('Pending', 'Pending'),
-        ('Success', 'Success'),
-        ('Rejected', 'Rejected'),
-    )
-    LEVELS = (
-        ('National', 'National'),
-        ('State', 'State'),
-        ('College', 'College'),
-    )
-    MEDIA_CHOICES = (
-        ('photo', 'Photo'),
-        ('video', 'Video'),
-        ('both', 'Both Photo and Video'),
-        ('none', 'No Media'),
-    )
-
+    booking_number = models.CharField(max_length=10, unique=True, default=uuid.uuid4, editable=False)
     program_title = models.CharField(max_length=200,null=True,blank=True)
     date = models.DateField(null=True)
-    slug = models.SlugField(unique=True, null=True, blank=True)
     requested_dep = models.CharField(max_length=200)
     venue = models.ForeignKey(Venue,blank=True,on_delete=models.CASCADE)
     ac = models.BooleanField(default=False)
-    time_slots = models.ManyToManyField(Slots,blank=True)
-    coordinator = models.CharField(max_length=200)
-    contact_no = models.CharField(max_length=10)
-    expected_no_of_participants = models.PositiveIntegerField()
-    level = models.ForeignKey(Levels,blank=True,on_delete=models.CASCADE)
-    sponsor = models.CharField(max_length=100)
-    chief_guest = models.CharField(max_length=100)
-    objective_of_programme = models.TextField()
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
-    media_selection = models.ForeignKey(Media,blank=True,on_delete=models.CASCADE)
-    reason = models.TextField(blank=True,null=True)
+    slots = models.ManyToManyField(Slots,blank=True)
+    coordinator = models.CharField(max_length=200,blank=True)
+    contact_no = models.CharField(max_length=10,blank=True)
+    participants = models.PositiveIntegerField(blank=True)
+    level = models.ForeignKey(Levels,on_delete=models.CASCADE)
+    sponsor = models.CharField(max_length=100,blank=True)
+    chief_guest = models.CharField(max_length=100,blank=True)
+    program_obj = models.TextField(max_length=100,blank=True)
+    media = models.ForeignKey(Media_sel,on_delete=models.CASCADE)
+    is_cancelled = models.BooleanField(default=False)
+    is_queue = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=False)
+    is_rejected = models.BooleanField(default=False)
+    is_postpone = models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.program_title)
-        super(Booking_request,self).save(*args, **kwargs)
     
     def __str__(self)-> str:
-        return f"{self.program_title} status :{self.status}"
+        return f"{self.program_title}"
     
 
 
+class Booking_approval(BaseModel):
+    AC_CHOICES = (
+        ('free','free'),
+        ('paid','paid'),
+    )
+    booking_id = models.ForeignKey(Booking_request,on_delete=models.CASCADE)
+    princi_app = models.CharField(default='pending',max_length=20)
+    admin_app = models.CharField(default='pending',max_length=20)
+    ac_paid = models.CharField(choices=AC_CHOICES, max_length=20,blank=True)
+    reason_princi = models.TextField(blank=True)
+    reason_admin = models.TextField(blank=True)
+    status = models.CharField(default='pending',max_length=20) 
+    is_postpone = models.BooleanField(default=False)
 
+    def __str__(self)-> str:
+        return f"{self.booking_id}"
+
+
+
+class Booking_postpone(BaseModel):
+    booking_id = models.ForeignKey(Booking_request,on_delete=models.CASCADE)
+    slots = models.ManyToManyField(Slots,blank=True)
+    date = models.DateField(null=True)
+    
+    def __str__(self)-> str:
+        return f"{self.booking_id}"
+
+
+class media_req(BaseModel):
+    booking_id = models.ForeignKey(Booking_request,on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
+    reason = models.TextField()
+
+
+    def __str__(self)-> str:
+        return f"{self.booking_id}"
 

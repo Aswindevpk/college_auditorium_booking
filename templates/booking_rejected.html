@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% include "base/navbar.html" %}
+<div class="container mt-5">
+    <div class="container d-flex flex-column align-items-center">
+      <h4 class="font-weight-bold">Rejected Bookings</h4>
+    </div>
+      <div class="mt-4 col-md-6 mx-auto">
+          {% for booking in  bookings %}
+              <div class="mt-4 py-3">
+                <div class="card">
+                  <div class="card-header">
+                    # {{booking.booking_number}}
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">{{booking.program_title}}</h5>
+                    <p class="card-text">On {{booking.date}}, At {{booking.venue}}</p>
+                    <a href={% url "rejectReason" booking.id%} class="btn btn-primary">View Reason</a>
+                  </div>
+                </div>
+              </div>
+          {% endfor %}
+      </div>
+</div>
+{% endblock content %}

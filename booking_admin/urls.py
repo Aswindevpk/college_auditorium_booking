@@ -6,10 +6,11 @@ urlpatterns = [
     path('media/',views.mediaHome,name='mediaHome'),
     path('booking/',views.bookingHome,name='bookingHome'),
     path('approve-booking/<str:pk>',views.approveBooking,name='approveBooking'),
-    path('reject-booking/<str:pk>',views.rejectBooking,name='rejectBooking'),
+    path('reject-booking/',views.rejectBooking,name='rejectBooking'),
     path('approved-booking-list/',views.approvedBookingList,name='approvedBookingList'),
     path('rejected-booking-list/',views.rejectedBookingList,name='rejectedBookingList'),
     path('logout/',views.adminLogout,name='adminLogout'),
     path('view-request-form/<str:pk>',views.viewRequestForm,name='viewRequestForm'),
-
+    path('view-request-form-approved/<str:pk>',views.viewRequestFormApproved,name='viewRequestFormApproved'),
+    path('view-request-form-rejected/<str:pk>',views.viewRequestFormRejected,name='viewRequestFormRejected'),
 ]

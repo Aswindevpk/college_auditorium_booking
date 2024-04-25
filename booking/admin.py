@@ -6,6 +6,9 @@ from .models import *
 admin.site.register(Booking_request)
 admin.site.register(Venue)
 admin.site.register(Slots)
-admin.site.register(Media)
+admin.site.register(Booking_approval)
+admin.site.register(Booking_postpone)
+admin.site.register(media_req)
 admin.site.register(Levels)
+admin.site.register(Media_sel)
 

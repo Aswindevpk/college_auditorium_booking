@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% include "base/navbar.html" %}
+<div class="container mt-5 text-center">
+  <h4 class="mb-3">Your booking Has been Rejected</h4>
+  {% if reason.princi_app == 'reject' %}
+  <h5>rejected by principal</h5>
+  <h6>Reason : {{reason.reason_princi}}</h6>
+  {% elif reason.admin_app == 'reject' %}
+  <h5 class="text-danger">rejected by admin</h5>
+  <h5 class="text-danger">Reason : {{reason.reason_admin}}</h5>
+  {% endif %}
+
+</div>
+{% endblock content %}
