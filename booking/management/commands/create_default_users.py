@@ -15,3 +15,15 @@ class Command(BaseCommand):
             user=User.objects.create_user('sjcmain', 'sjcmain@gmail.com', 'pass@123')
             user.is_staff=True
             user.save()
+
+        if not User.objects.filter(username='bsc_physics').exists():
+            user=User.objects.create_user('bsc_pysics', 'bsc_physics@gmail.com', 'pass@123')
+            user.save()
+
+        if not User.objects.filter(username='bca').exists():
+            user=User.objects.create_user('bca', 'bca@gmail.com', 'pass@123')
+            user.save()
+
+        if not User.objects.filter(username='bcom').exists():
+            user=User.objects.create_user('bcom', 'bcom@gmail.com', 'pass@123')
+            user.save()

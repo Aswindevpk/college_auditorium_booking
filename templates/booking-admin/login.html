@@ -6,62 +6,64 @@
 <nav class="navbar navbar-light bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-      <small class="text-center px-3" style="font-size: 1.5rem;">SJC Auditorium Booking</small>
+      <small class="text-center px-3" style="font-size: 1.5rem;">Auditorium Booking</small>
     </a>
   </div>
 </nav>
 
-  <section class="vh-100">
-    <div class="container py-5 h-100">
-      <div class="row d-flex align-items-center justify-content-center h-100">
-        <div class="col-md-8 col-lg-7 col-xl-6">
-          <img src="{% static 'images/loginpageimg.svg' %}"
-            class="img-fluid" alt="Phone image">
-        </div>
-        <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-          <h2 class="text-center">Admin Login</h2>
-          <form method="post">
-            {% csrf_token %}
-            <!-- Email input -->
-            <div class="form-outline mb-4">
-              <label class="form-label" for="form1Example13">Username</label>
-              <input type="text" id="form1Example13" class="form-control form-control-lg" name="username" required/>
+<section class="vh-100">
+  <div class="container py-5 h-100">
+    <div class="row d-flex align-items-center justify-content-center h-100">
+      <div class="col-md-8 col-lg-7 col-xl-6">
+        <img src="{% static 'images/loginpageimg.svg' %}" class="img-fluid" alt="Phone image">
+      </div>
+      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+        <h2 class="text-center">Admin Login</h2>
+        <form method="post">
+          {% csrf_token %}
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <label class="form-label" for="form1Example13">Username</label>
+            <input type="text" id="form1Example13" class="form-control form-control-lg" name="username" required />
+          </div>
+
+          <!-- Password input -->
+          <div class="form-outline mb-4">
+            <label class="form-label" for="form1Example23">Password</label>
+            <input type="password" id="form1Example23" class="form-control form-control-lg" name="password" required />
+          </div>
+
+          {% comment %} <div class="d-flex justify-content-around align-items-center mb-4">
+            <!-- Checkbox -->
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="form1Example3" checked />
+              <label class="form-check-label" for="form1Example3"> Remember me </label>
             </div>
-  
-            <!-- Password input -->
-            <div class="form-outline mb-4">
-              <label class="form-label" for="form1Example23">Password</label>
-              <input type="password" id="form1Example23" class="form-control form-control-lg" name="password" required/>
-            </div>
-  
-            {% comment %} <div class="d-flex justify-content-around align-items-center mb-4">
-              <!-- Checkbox -->
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="form1Example3" checked />
-                <label class="form-check-label" for="form1Example3"> Remember me </label>
-              </div>
-              <a href="#!">Forgot password?</a>
-            </div> {% endcomment %}
-  
-            <!-- Submit button -->
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Log in</button>
-  
-            {% comment %} <div class="divider d-flex align-items-center my-4">
-              <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
-            </div> {% endcomment %}
-  
-            {% comment %} <a class="btn btn-primary btn-lg btn-block" style="background-color: #3b5998" href="#!"
-              role="button">
-              <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
-            </a>
-            <a class="btn btn-primary btn-lg btn-block" style="background-color: #55acee" href="#!"
-              role="button">
-              <i class="fab fa-twitter me-2"></i>Continue with Twitter</a> {% endcomment %}
-  
-          </form>
-        </div>
+            <a href="#!">Forgot password?</a>
+          </div> {% endcomment %}
+
+          <!-- Submit button -->
+          <button type="submit" class="btn btn-primary btn-lg btn-block">Log in</button>
+
+          <div class="divider d-flex align-items-center my-4">
+            <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
+          </div>
+
+          <a class="btn btn-primary btn-sm btn-block" href="{% url 'loginPage' %}" role="button">
+            <i class=""></i> Go to Department Login
+          </a>
+
+          {% comment %} <a class="btn btn-primary btn-lg btn-block" style="background-color: #3b5998" href="#!"
+            role="button">
+            <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
+          </a>
+          <a class="btn btn-primary btn-lg btn-block" style="background-color: #55acee" href="#!" role="button">
+            <i class="fab fa-twitter me-2"></i>Continue with Twitter</a> {% endcomment %}
+
+        </form>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
 {% endblock content %}
