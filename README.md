@@ -17,11 +17,11 @@ This project is a web-based application for booking venues, managing bookings, a
 2. Use the following credentials:
 
    **User1**:
-   - Username: `CS`
+   - Username: `bca`
    - Password: `pass@123`
    
    **User2**:
-   - Username: `BCOM`
+   - Username: `bcom`
    - Password: `pass@123`
 
 ### Booking a Venue
@@ -54,6 +54,14 @@ This project is a web-based application for booking venues, managing bookings, a
 
 1. Go to the [Admin Page](https://appus2023.pythonanywhere.com/booking-admin/)
 2. Use the provided admin credentials.
+   
+   **admin**:
+   - Username: `sjcadmin`
+   - Password: `pass@123`
+   
+   **principal**:
+   - Username: `sjcmain`
+   - Password: `pass@123`
 
 ### Approval Process
 
